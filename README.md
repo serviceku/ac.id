@@ -1,1124 +1,1189 @@
-<html lang="Servicku.id" class="scroll-smooth">
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serviceku - Jasa Service Elektronik Indramayu, Cirebon & Majalengka</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Serviceku - Jasa Service Elektronik Terbaik</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#0284c7',
-                            600: '#0265a3',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                            gold: '#f59e0b',
-                            accent: '#10b981'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        primary: '#1e3a8a', // Blue-900
+                        secondary: '#3b82f6', // Blue-500
+                        accent: '#0ea5e9', // Sky-500
                     }
                 }
             }
         }
     </script>
     <style>
-        .gradient-banner-1 { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%); }
-        .gradient-banner-2 { background: linear-gradient(135deg, #022c22 0%, #065f46 50%, #0f766e 100%); }
-        .gradient-banner-3 { background: linear-gradient(135deg, #31103f 0%, #701a75 50%, #0284c7 100%); }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* Custom Styles & Animations */
+        body { -webkit-font-smoothing: antialiased; }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        
+        .slide-enter { animation: slideIn 0.5s forwards; }
+        .slide-exit { animation: slideOut 0.5s forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-100%); } }
+        
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hide scrollbar for clean look in sliders if needed */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.1); opacity: 0; transform: translateY(20px); transition: all 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background-color: #10b981; }
+        .toast.error { background-color: #ef4444; }
+        .toast.info { background-color: #3b82f6; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- HEADER & NAVBAR -->
-    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
-            <a href="#" class="flex items-center gap-3 group">
-                <div class="relative w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-700 to-blue-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform overflow-hidden">
-                    <img id="header-logo-img" src="https://lh3.googleusercontent.com/d/1xLoqpa4lr1o8_sM323Zm5HYN_BlfIU0x" alt="Serviceku Logo" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').classList.remove('hidden');">
-                    <i id="fallback-logo-icon" class="fa-solid fa-screwdriver-wrench text-2xl hidden"></i>
-                </div>
-                <div>
-                    <span class="text-2xl font-black tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">Service<span class="text-brand-500">ku</span></span>
-                    <p class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase -mt-1">Panggilan Elektronik</p>
-                </div>
-            </a>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-                <a href="#beranda" class="hover:text-brand-600 transition-colors">Beranda</a>
-                <a href="#katalog" class="hover:text-brand-600 transition-colors">Katalog Jasa</a>
-                <a href="#keunggulan" class="hover:text-brand-600 transition-colors">Keunggulan</a>
-                <a href="#wilayah" class="hover:text-brand-600 transition-colors">Wilayah Layanan</a>
-            </nav>
-
-            <!-- Actions & Admin Login -->
-            <div class="flex items-center gap-3">
-                <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20ingin%20konsultasi%20mengenai%20service%20elektronik." target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-md shadow-emerald-600/20 hover:shadow-lg transition-all active:scale-95">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Hubungi Kami</span>
-                </a>
-
-                <!-- Admin Status / Login Toggle -->
-                <button id="admin-login-btn" onclick="openAdminModal()" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all active:scale-95">
-                    <i class="fa-solid fa-user-shield text-brand-500"></i>
-                    <span id="admin-btn-text">Admin Login</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- HERO SLIDESHOW BANNER -->
-    <section id="beranda" class="relative bg-slate-900 text-white overflow-hidden">
-        <div id="slideshow-container" class="relative min-h-[420px] md:min-h-[480px] flex items-center">
-            <!-- Slide items will be dynamically generated via JS -->
-            <div id="slides-wrapper" class="w-full h-full flex transition-transform duration-700 ease-in-out">
-                <!-- Fallback Loading State -->
-                <div class="w-full flex-shrink-0 gradient-banner-1 py-16 px-6 md:px-16 flex items-center">
-                    <div class="max-w-4xl mx-auto text-center md:text-left space-y-4">
-                        <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-amber-300">Spesialis Service Elektronik</span>
-                        <h1 class="text-3xl md:text-5xl font-black leading-tight">Layanan Service AC, Kulkas & Mesin Cuci Terpercaya</h1>
-                        <p class="text-slate-200 text-sm md:text-lg max-w-2xl">Teknisi berpengalaman, pengerjaan cepat, sparepart berkualitas & bergaransi hingga 1 bulan!</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Carousel Controls -->
-            <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm flex items-center justify-center transition-all">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm flex items-center justify-center transition-all">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-
-            <!-- Indicators -->
-            <div id="slideshow-indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                <!-- Dots injected via JS -->
-            </div>
-        </div>
-
-        <!-- Banner Info Bar -->
-        <div class="bg-slate-950/80 border-t border-slate-800 py-3 px-4 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs md:text-sm text-slate-300">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-certificate text-amber-400"></i>
-                    <span><strong>GARANSI 1 BULAN</strong> untuk kerusakan yang sama</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-location-dot text-red-400"></i>
-                    <span>Area Layanan: <strong>Indramayu, Cirebon, Majalengka</strong></span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-truck-fast text-brand-500"></i>
-                    <span>Melayani Panggilan Ke Rumah Anda</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MAIN CATALOGUE SECTION -->
-    <main id="katalog" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <!-- Section Header -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-            <div>
-                <span class="text-brand-600 font-bold text-xs uppercase tracking-wider">Katalog Layanan</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Daftar Jasa Serviceku</h2>
-                <p class="text-slate-500 text-sm mt-1">Pilih layanan yang Anda butuhkan dan langsung pesan via WhatsApp.</p>
-            </div>
-
-            <!-- Admin Add Button Banner/Service -->
-            <div id="admin-actions-bar" class="hidden flex items-center gap-2">
-                <button onclick="openAddServiceModal()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md transition-all">
-                    <i class="fa-solid fa-plus-circle"></i> Tambah Jasa Baru
-                </button>
-                <button onclick="openManageBannersModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md transition-all">
-                    <i class="fa-solid fa-images"></i> Kelola Banner
-                </button>
-            </div>
-        </div>
-
-        <!-- Filter Categories -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none" id="category-filters">
-            <button onclick="filterCategory('semua')" class="filter-btn active bg-brand-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap shadow-sm transition-all">Semua Jasa</button>
-            <button onclick="filterCategory('AC')" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">Service AC</button>
-            <button onclick="filterCategory('Kulkas')" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">Kulkas</button>
-            <button onclick="filterCategory('Mesin Cuci')" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">Mesin Cuci</button>
-            <button onclick="filterCategory('Showcase & Freezer')" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">Showcase / Freezer</button>
-            <button onclick="filterCategory('Dispenser')" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">Dispenser</button>
-        </div>
-
-        <!-- Services Grid -->
-        <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Loading Skeleton -->
-            <div class="animate-pulse bg-white rounded-2xl border border-slate-200 p-4 space-y-4">
-                <div class="bg-slate-200 h-48 rounded-xl"></div>
-                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                <div class="h-4 bg-slate-200 rounded w-1/2"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- KEUNGGULAN & COVERAGE SECTION -->
-    <section id="keunggulan" class="bg-slate-900 text-white py-16 border-t border-slate-800">
+    <nav class="glass-nav fixed w-full top-0 z-50 border-b border-slate-200 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-brand-500 font-bold text-xs uppercase tracking-wider">Mengapa Memilih Kami?</span>
-                <h2 class="text-3xl font-extrabold mt-1">Keunggulan Serviceku</h2>
-                <p class="text-slate-400 text-sm mt-2">Komitmen kami untuk memberikan hasil terbaik dengan pelayanan jujur dan harga ramah dikantong.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-slate-800/60 p-6 rounded-2xl border border-slate-700 hover:border-brand-500/50 transition-all">
-                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-2xl mb-4">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <h3 class="text-lg font-bold">Garansi Pekerjaan</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">Garansi resmi hingga 1 bulan untuk kerusakan dan bagian yang sama. Kami tanggap mengatasi keluhan.</p>
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="app.navigate('home')">
+                    <!-- Menggunakan logo baru dari Google Drive -->
+                    <img class="h-12 w-auto rounded-lg shadow-sm border border-slate-100 object-cover" 
+                         src="https://lh3.googleusercontent.com/d/1L2CtZvTu4_T8ji_R1u72kLdQbhdjoFzw" 
+                         alt="Logo Serviceku" 
+                         onerror="this.src='https://placehold.co/100x100/1e3a8a/ffffff?text=Serviceku'">
+                    <span class="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Serviceku</span>
                 </div>
-
-                <div class="bg-slate-800/60 p-6 rounded-2xl border border-slate-700 hover:border-brand-500/50 transition-all">
-                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center text-2xl mb-4">
-                        <i class="fa-solid fa-user-gear"></i>
-                    </div>
-                    <h3 class="text-lg font-bold">Teknisi Berpengalaman</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">Teknisi handal, ramah, jujur dan amanah Siap datang langsung ke tempat tinggal Anda.</p>
-                </div>
-
-                <div class="bg-slate-800/60 p-6 rounded-2xl border border-slate-700 hover:border-brand-500/50 transition-all">
-                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-4">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h3 class="text-lg font-bold">Cepat & Tepat Waktu</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">Proses pengerjaan dilakukan dengan akurat, efisien, cepat dan profesional tanpa menunda waktu.</p>
-                </div>
-
-                <div class="bg-slate-800/60 p-6 rounded-2xl border border-slate-700 hover:border-brand-500/50 transition-all">
-                    <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-2xl mb-4">
-                        <i class="fa-solid fa-microchip"></i>
-                    </div>
-                    <h3 class="text-lg font-bold">Sparepart Berkualitas</h3>
-                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">Menggunakan komponen & sparepart original bersertifikasi agar elektronik awet tahan lama.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WILAYAH LAYANAN SECTION -->
-    <section id="wilayah" class="py-16 bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-brand-900 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div class="max-w-2xl relative z-10 space-y-4">
-                    <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-400 rounded-full text-xs font-bold uppercase">Melayani Panggilan</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold">Jangkauan Wilayah Operasional Kami</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Kami siap dipanggil untuk kebutuhan perbaikan perangkat elektronik rumah tangga di wilayah:
-                    </p>
-                    <div class="flex flex-wrap gap-3 pt-2">
-                        <span class="px-4 py-2 bg-white/10 rounded-xl text-sm font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-map-pin text-amber-400"></i> Indramayu
-                        </span>
-                        <span class="px-4 py-2 bg-white/10 rounded-xl text-sm font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-map-pin text-amber-400"></i> Cirebon
-                        </span>
-                        <span class="px-4 py-2 bg-white/10 rounded-xl text-sm font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-map-pin text-amber-400"></i> Majalengka
-                        </span>
-                    </div>
-                    <p class="text-xs text-slate-400 pt-2"><i class="fa-solid fa-location-arrow text-brand-400"></i> Alamat Bengkel: Jl. Bypass Binaria - Bondan</p>
-                </div>
-
-                <div class="relative z-10 flex-shrink-0 text-center lg:text-right bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/10">
-                    <p class="text-xs text-slate-300 font-semibold uppercase">Butuh Service Hari Ini?</p>
-                    <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20butuh%20panggilan%20teknisi%20ke%20lokasi%20saya." target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3.5 rounded-xl font-bold text-base shadow-lg transition-all active:scale-95">
-                        <i class="fa-brands fa-whatsapp text-xl"></i>
-                        <span>0878-7441-7978</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900 text-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="space-y-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                    </div>
-                    <span class="text-xl font-bold text-white">Serviceku</span>
-                </div>
-                <p class="text-xs text-slate-400 leading-relaxed">
-                    Pusat layanan perbaikan & perawatan unit AC, Kulkas, Mesin Cuci, Showcase, Freezer Box & Dispenser terpercaya di wilayah Indramayu, Cirebon, Majalengka.
-                </p>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-3">Kontak & Alamat</h4>
-                <ul class="space-y-2 text-xs">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-phone text-brand-500"></i> +62 878-7441-7978</li>
-                    <li class="flex items-start gap-2"><i class="fa-solid fa-location-dot text-brand-500 mt-1"></i> Jl. bypass Binaria-bondan</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-clock text-brand-500"></i> Buka Setiap Hari (08:00 - 18:00 WIB)</li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-3">Garansi Service</h4>
-                <p class="text-xs text-slate-400 leading-relaxed">
-                    Semua jenis perbaikan mendapatkan jaminan garansi 1 bulan untuk item sparepart & kerusakan yang sama. Hubungi kami jika terdapat kendala pasca pengerjaan.
-                </p>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-slate-900 text-center text-xs text-slate-600">
-            &copy; <span id="year">2026</span> Serviceku. All rights reserved.
-        </div>
-    </footer>
-
-    <!-- FLOATING WHATSAPP BUTTON -->
-    <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20ingin%20tanya%20jasa%20service." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-30 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-300 group">
-        <i class="fa-brands fa-whatsapp text-3xl"></i>
-        <span class="absolute right-16 bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
-            Chat WhatsApp Now
-        </span>
-    </a>
-
-    <!-- MODAL 1: ADMIN LOGIN MODAL -->
-    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in duration-200">
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 w-8 h-8 text-slate-400 hover:text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div class="text-center mb-6">
-                <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3 class="text-xl font-extrabold text-slate-900">Login Administrator</h3>
-                <p class="text-xs text-slate-500 mt-1">Masukkan Username dan Password untuk mengelola jasa & banner</p>
-            </div>
-
-            <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Username</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="text" id="admin-username" required placeholder="Masukkan username admin" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:bg-white transition-all">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="password" id="admin-password" required placeholder="Masukkan password" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:bg-white transition-all">
-                        <!-- Eye Icon Toggle -->
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                            <i id="password-toggle-icon" class="fa-solid fa-eye text-sm"></i>
+                <!-- Nav Links -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="app.navigate('home')" class="text-slate-600 hover:text-primary px-3 py-2 rounded-md font-medium transition-colors hidden sm:block">Beranda</button>
+                    
+                    <!-- Login/Admin Button -->
+                    <div id="auth-btn-container">
+                        <button onclick="app.showLoginModal()" class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-2">
+                            <i class="fas fa-user-shield"></i> Admin Login
                         </button>
                     </div>
                 </div>
-
-                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl text-sm shadow-md hover:shadow-lg transition-all active:scale-95">
-                    Masuk ke Dashboard
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 2: ADD / EDIT SERVICE MODAL -->
-    <div id="service-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative my-8">
-            <button onclick="closeServiceModal()" class="absolute top-4 right-4 w-8 h-8 text-slate-400 hover:text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-100">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <h3 id="service-modal-title" class="text-xl font-extrabold text-slate-900 mb-4">Tambah Jasa Service Baru</h3>
-
-            <form id="service-form" onsubmit="saveService(event)" class="space-y-4 text-xs sm:text-sm">
-                <input type="hidden" id="service-id">
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Nama Jasa / Perbaikan *</label>
-                    <input type="text" id="service-title" required placeholder="Contoh: Cuci AC Standard" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Kategori *</label>
-                        <select id="service-category" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                            <option value="AC">AC</option>
-                            <option value="Kulkas">Kulkas</option>
-                            <option value="Mesin Cuci">Mesin Cuci</option>
-                            <option value="Showcase & Freezer">Showcase & Freezer</option>
-                            <option value="Dispenser">Dispenser</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Harga (Rp) *</label>
-                        <input type="text" id="service-price" required placeholder="Contoh: 75.000 atau 750.000" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">URL Foto Jasa *</label>
-                    <input type="url" id="service-image" required placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                    <p class="text-[11px] text-slate-400 mt-1">Gunakan link gambar langsung dari internet / Unsplash.</p>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Deskripsi & Rincian Pengerjaan *</label>
-                    <textarea id="service-desc" rows="3" required placeholder="Jelaskan detail garansi, proses service, atau syarat teknis..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500"></textarea>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Wilayah Layanan</label>
-                    <input type="text" id="service-location" value="Indramayu, Cirebon, Majalengka" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Garansi</label>
-                    <input type="text" id="service-guarantee" value="Garansi Service 1 Bulan" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-500">
-                </div>
-
-                <div class="pt-2 flex gap-3">
-                    <button type="button" onclick="closeServiceModal()" class="w-1/2 py-2.5 border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50">Batal</button>
-                    <button type="submit" class="w-1/2 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md">Simpan Jasa</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL 3: MANAGE BANNERS MODAL -->
-    <div id="banners-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative my-8">
-            <button onclick="closeBannersModal()" class="absolute top-4 right-4 w-8 h-8 text-slate-400 hover:text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-100">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Kelola Banner Slide Show</h3>
-            <p class="text-xs text-slate-500 mb-6">Tambah atau hapus banner promosi yang tampil di halaman depan.</p>
-
-            <!-- Form Add Banner -->
-            <form onsubmit="saveBanner(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 mb-6">
-                <h4 class="font-bold text-slate-800 text-xs uppercase">Tambah Banner Baru</h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input type="text" id="banner-title" required placeholder="Judul Promosi" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none">
-                    <input type="text" id="banner-subtitle" required placeholder="Subjudul / Deskripsi Singkat" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <select id="banner-theme" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none">
-                        <option value="gradient-banner-1">Tema Biru Navy - Serviceku</option>
-                        <option value="gradient-banner-2">Tema Hijau Emerald</option>
-                        <option value="gradient-banner-3">Tema Ungu Modern</option>
-                    </select>
-                    <input type="text" id="banner-badge" placeholder="Badge (Contoh: PROMO SPESIAL)" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none">
-                </div>
-                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded-xl text-xs shadow">
-                    + Tambahkan ke Slideshow
-                </button>
-            </form>
-
-            <!-- Banners List -->
-            <div class="space-y-3 max-h-60 overflow-y-auto pr-1" id="admin-banners-list">
-                <!-- Injected via JS -->
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- MODAL 4: DETAIL SERVICE MODAL -->
-    <div id="detail-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
-            <button onclick="closeDetailModal()" class="absolute top-4 right-4 w-8 h-8 text-slate-400 hover:text-slate-600 rounded-full flex items-center justify-center hover:bg-slate-100">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
+    <!-- Toasts Container -->
+    <div id="toast-container"></div>
 
-            <div id="detail-content">
-                <!-- Dynamically filled -->
+    <main id="main-content" class="flex-grow pt-20">
+        <!-- Views will be injected here by JS -->
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300 py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0 flex items-center gap-3">
+                <i class="fas fa-tools text-2xl text-accent"></i>
+                <div>
+                    <span class="text-xl font-bold text-white">Serviceku</span>
+                    <p class="text-sm text-slate-400">Spesialis Pendingin & Mesin Elektronik</p>
+                </div>
+            </div>
+            <div class="text-sm">
+                &copy; <span id="current-year"></span> Serviceku. All rights reserved.
+            </div>
+            <div class="flex space-x-4 mt-4 md:mt-0 text-xl">
+                <a href="https://wa.me/6287874417978" target="_blank" class="text-green-400 hover:text-green-300 transition-colors"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
+    </footer>
+
+    <!-- Modal Backdrop -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        
+        <!-- Login Modal -->
+        <div id="login-modal" class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hidden transform scale-95 transition-all duration-300">
+            <div class="bg-gradient-to-r from-primary to-secondary p-6 text-center">
+                <h3 class="text-2xl font-bold text-white">Login Admin</h3>
+                <p class="text-blue-100 text-sm mt-1">Masuk untuk mengelola layanan</p>
+            </div>
+            <div class="p-6">
+                <form id="login-form" onsubmit="app.handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-slate-700 text-sm font-bold mb-2" for="username">Username Admin</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-slate-400"></i>
+                            </div>
+                            <input class="pl-10 appearance-none border border-slate-300 rounded-lg w-full py-3 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" id="username" type="text" placeholder="Masukkan username" required>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-slate-700 text-sm font-bold mb-2" for="password">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-slate-400"></i>
+                            </div>
+                            <input class="pl-10 appearance-none border border-slate-300 rounded-lg w-full py-3 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" id="password" type="password" placeholder="••••••••" required>
+                            <!-- Ikon Mata Toggle Password -->
+                            <button type="button" onclick="app.togglePasswordVisibility('password', 'eye-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none">
+                                <i id="eye-icon" class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <button type="button" onclick="app.closeModals()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-lg transition-colors">Batal</button>
+                        <button type="submit" class="w-full bg-primary hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow hover:shadow-lg transition-all">Masuk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Service Form Modal -->
+        <div id="service-modal" class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden hidden transform scale-95 transition-all duration-300 max-h-[90vh] flex flex-col">
+            <div class="bg-gradient-to-r from-primary to-accent p-5 flex justify-between items-center">
+                <h3 id="service-modal-title" class="text-xl font-bold text-white">Tambah Jasa Baru</h3>
+                <button onclick="app.closeModals()" class="text-white hover:text-red-200 transition-colors"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar">
+                <form id="service-form" onsubmit="app.handleServiceSubmit(event)">
+                    <input type="hidden" id="service-id">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama Jasa</label>
+                            <input type="text" id="service-name" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Contoh: Cuci AC Split" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Harga (Rp)</label>
+                            <input type="text" id="service-price" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Contoh: 75.000 atau Mulai 100rb" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Deskripsi & Syarat</label>
+                        <textarea id="service-desc" rows="3" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Jelaskan detail jasa ini..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Foto Jasa</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-2"></i>
+                                    <p class="mb-2 text-sm text-slate-500"><span class="font-semibold">Klik untuk upload</span> foto</p>
+                                    <p class="text-xs text-slate-500">PNG, JPG (Otomatis dikompres)</p>
+                                </div>
+                                <input id="service-image-upload" type="file" class="hidden" accept="image/*" onchange="app.handleImageSelect(event, 'service-image-preview')" />
+                            </label>
+                        </div>
+                        <input type="hidden" id="service-image-data">
+                        <div id="service-image-preview" class="mt-3 hidden">
+                            <img src="" class="h-32 object-contain rounded-lg border shadow-sm mx-auto">
+                            <button type="button" onclick="app.clearImagePreview('service-image-preview', 'service-image-data', 'service-image-upload')" class="block mt-2 text-red-500 text-sm font-medium mx-auto hover:underline">Hapus Foto</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Area Layanan / Keterangan Lain</label>
+                        <input type="text" id="service-area" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Contoh: Indramayu, Cirebon, Majalengka">
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                        <button type="button" onclick="app.closeModals()" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors">Batal</button>
+                        <button type="submit" id="service-submit-btn" class="px-5 py-2.5 bg-primary text-white rounded-lg font-medium hover:bg-blue-800 transition-colors shadow-md">Simpan Jasa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Banner Form Modal -->
+        <div id="banner-modal" class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hidden transform scale-95 transition-all duration-300">
+            <div class="bg-gradient-to-r from-secondary to-accent p-5 flex justify-between items-center">
+                <h3 id="banner-modal-title" class="text-xl font-bold text-white">Tambah Banner Info</h3>
+                <button onclick="app.closeModals()" class="text-white hover:text-red-200 transition-colors"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="p-6">
+                <form id="banner-form" onsubmit="app.handleBannerSubmit(event)">
+                    <input type="hidden" id="banner-id">
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Judul Promosi</label>
+                        <input type="text" id="banner-title" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-secondary outline-none" placeholder="Contoh: Diskon Service AC!" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Sub Judul / Teks Promo</label>
+                        <textarea id="banner-subtitle" rows="2" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-secondary outline-none" placeholder="Dapatkan potongan 50rb khusus bulan ini..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-3 mt-6">
+                        <button type="button" onclick="app.closeModals()" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 transition-colors">Batal</button>
+                        <button type="submit" id="banner-submit-btn" class="px-5 py-2.5 bg-secondary text-white rounded-lg font-medium hover:bg-blue-600 transition-colors shadow-md">Simpan Banner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
-    <!-- CUSTOM TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs sm:text-sm font-semibold hidden flex items-center gap-3 transition-all duration-300">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-message">Pesan sukses disini</span>
-    </div>
-
-    <!-- FIREBASE & JS SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInAnonymously, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration & System Constants
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : { apiKey: "demo", authDomain: "demo.firebaseapp.com", projectId: "demo-app" };
+        const DEFAULT_SERVICES = [
+            {
+                id: 'srv-1',
+                name: 'Cuci AC Split / Window',
+                price: 'Rp 75.000',
+                desc: 'Pembersihan unit indoor & outdoor AC secara menyeluruh agar dingin maksimal dan hemat listrik.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 50000
+            },
+            {
+                id: 'srv-2',
+                name: 'Cuci Overhaul Turun Unit',
+                price: 'Rp 350.000',
+                desc: 'Pembersihan total AC dengan menurunkan unit indoor untuk pembersihan bagian dalam yang sangat kotor.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 40000
+            },
+            {
+                id: 'srv-3',
+                name: 'Pasang AC Baru / Second',
+                price: 'Rp 350.000',
+                desc: 'Jasa pemasangan unit AC indoor & outdoor rapi, presisi, dan diuji kekedapan pipa.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 30000
+            },
+            {
+                id: 'srv-4',
+                name: 'Bongkar AC',
+                price: 'Rp 250.000',
+                desc: 'Pelepasan unit AC lama dengan aman tanpa membuang isi freon.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 20000
+            },
+            {
+                id: 'srv-5',
+                name: 'Perbaikan Kebocoran Freon AC',
+                price: 'Mulai Rp 750.000',
+                desc: 'Pengelasan/perbaikan titik bocor pipa freon, vakum sistem, dan pengisian ulang freon full.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 10000
+            },
+            {
+                id: 'srv-6',
+                name: 'Service Kulkas (1 & 2 Pintu / Side by Side)',
+                price: 'Mulai Rp 150.000',
+                desc: 'Perbaikan kulkas tidak dingin, ganti kompresor, isi freon, perbaikan kelistrikan & sistem defrost.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 5000
+            },
+            {
+                id: 'srv-7',
+                name: 'Service Mesin Cuci (Front & Top Loading)',
+                price: 'Mulai Rp 150.000',
+                desc: 'Perbaikan mesin cuci mati total, air tidak keluar/terbuang, pengering bising, atau ganti dinamo.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 2000
+            },
+            {
+                id: 'srv-8',
+                name: 'Service Showcase, Freezer Box & Dispenser',
+                price: 'Mulai Rp 100.000',
+                desc: 'Service pendingin komersial, freezer es krim, showcase minuman, dan dispenser panas/dingin.',
+                area: 'Indramayu, Cirebon, Majalengka',
+                photoData: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=80',
+                createdAt: Date.now() - 1000
+            }
+        ];
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'serviceku-app';
+        const DEFAULT_BANNERS = [
+            {
+                id: 'ban-1',
+                title: 'SERVICEKU - Spesialis Pendingin & Elektronik',
+                subtitle: 'Melayani Service AC, Kulkas, Mesin Cuci, Showcase & Dispenser Bergaransi 1 Bulan!',
+                bgGradient: 'from-primary via-blue-800 to-slate-900',
+                createdAt: Date.now()
+            },
+            {
+                id: 'ban-2',
+                title: 'Melayani Panggilan Indramayu, Cirebon & Majalengka',
+                subtitle: 'Teknisi Handal, Jujur, Cepat, Tepat Waktu & Harga Terjangkau. Hubungi WA 0878-7441-7978',
+                bgGradient: 'from-blue-900 via-indigo-900 to-slate-900',
+                createdAt: Date.now() - 1000
+            }
+        ];
 
-        // Initialize Firebase Apps
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Global Application State
-        window.state = {
-            currentUser: null,
-            isAdmin: false,
-            services: [],
-            banners: [],
-            activeCategory: 'semua',
-            currentSlideIndex: 0,
-            slideshowInterval: null
+        // Konfigurasi Database Firebase yang aman untuk sistem file mandiri ini
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'serviceku-app-123';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "mock-key", projectId: "mock-project" 
         };
 
-        // Standard Initial Services Data from User Requirements
-        const INITIAL_SERVICES = [
-            {
-                id: "srv-1",
-                title: "Cuci AC Standard",
-                category: "AC",
-                price: "75.000",
-                image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80",
-                desc: "Pembersihan komplit unit indoor & outdoor AC. Menghilangkan debu, jamur, bau tak sedap dan mengembalikan kesegaran pendingin ruangan.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-2",
-                title: "Cuci Overhaul Turun Unit AC",
-                category: "AC",
-                price: "350.000",
-                image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-                desc: "Pembersihan total dengan mencopot/turun unit dari dinding. Cocok untuk AC yang tersumbat parah, berlendir, atau berbau menyengat.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-3",
-                title: "Pasang AC Baru / Second",
-                category: "AC",
-                price: "350.000",
-                image: "https://images.unsplash.com/photo-1614633833026-0e10f135b53d?auto=format&fit=crop&w=600&q=80",
-                desc: "Pemasangan unit indoor & outdoor rapi, vacum sistem panggunaan pipa presisi agar dingin maksimal dan terhindar bocor freon.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Instalasi 1 Bulan"
-            },
-            {
-                id: "srv-4",
-                title: "Bongkar AC",
-                category: "AC",
-                price: "250.000",
-                image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=600&q=80",
-                desc: "Pelepasan unit AC aman tanpa membuang freon (pump down) untuk pindah lokasi atau renovasi rumah.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Pengerjaan Rapi"
-            },
-            {
-                id: "srv-5",
-                title: "Perbaikan Kebocoran Freon AC",
-                category: "AC",
-                price: "750.000",
-                image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=600&q=80",
-                desc: "Deteksi titik bocor pipa/evaporator, pengelasan kebocoran, pengisian ulang freon R22 / R32 / R410a. Harga disesuaikan tingkat kesulitan.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Kebocoran 1 Bulan"
-            },
-            {
-                id: "srv-6",
-                title: "Perbaikan Module Control AC",
-                category: "AC",
-                price: "350.000",
-                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
-                desc: "Perbaikan pcb komputer AC matot, error sensor, atau remote tidak merespon.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-7",
-                title: "Penggantian Module Universal AC",
-                category: "AC",
-                price: "450.000",
-                image: "https://images.unsplash.com/photo-1597733336794-12d05021d510?auto=format&fit=crop&w=600&q=80",
-                desc: "Penggantian board PCB dengan module universal berkualitas tinggi lengkap dengan remote baru.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Module 1 Bulan"
-            },
-            {
-                id: "srv-8",
-                title: "Service Kulkas (2 Pintu & Side By Side)",
-                category: "Kulkas",
-                price: "150.000 - 350.000",
-                image: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=80",
-                desc: "Perbaikan kulkas kurang dingin, tidak beku, ganti kompresor, kelistrikan defrost, isi freon, atau kebocoran kondensor.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-9",
-                title: "Service Mesin Cuci (Front & Top Loading)",
-                category: "Mesin Cuci",
-                price: "150.000 - 300.000",
-                image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=600&q=80",
-                desc: "Perbaikan mesin cuci tidak berputar, air tidak mengalir/mampet, suara bising, atau pcb kontrol error.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-10",
-                title: "Service Showcase & Freezer Box",
-                category: "Showcase & Freezer",
-                price: "200.000 - 450.000",
-                image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80",
-                desc: "Perbaikan freezer box dan showcase tempat minuman / jualan toko agar kembali dingin maksimal.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            },
-            {
-                id: "srv-11",
-                title: "Service Dispenser Hot & Cold",
-                category: "Dispenser",
-                price: "100.000 - 200.000",
-                image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80",
-                desc: "Perbaikan dispenser tidak dingin, tidak panas, bocor air, atau mati total.",
-                location: "Indramayu, Cirebon, Majalengka",
-                guarantee: "Garansi Service 1 Bulan"
-            }
-        ];
-
-        const INITIAL_BANNERS = [
-            {
-                id: "ban-1",
-                title: "JASA SERVICE ELEKTRONIK TERBAIK",
-                subtitle: "Melayani Panggilan Ke Rumah Area Indramayu, Cirebon & Majalengka",
-                theme: "gradient-banner-1",
-                badge: "LAYANAN CEPAT & AMANAH"
-            },
-            {
-                id: "ban-2",
-                title: "SERVICE AC & KULKAS BERGARANSI",
-                subtitle: "Pengerjaan Tepat Waktu, Teknisi Handal & Garansi Penuh 1 Bulan",
-                theme: "gradient-banner-2",
-                badge: "GARANSI 1 BULAN"
-            },
-            {
-                id: "ban-3",
-                title: "SPAREPART ORIGINAL & HARGA BERSAHABAT",
-                subtitle: "Percayakan Kendala Perangkat Rumah Tangga Anda Pada Serviceku",
-                theme: "gradient-banner-3",
-                badge: "HARGA TERBAIK"
-            }
-        ];
-
-        // Authenticate Firebase user
-        async function initAuth() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.warn("Auth initialization fallback:", err);
-            }
+        let app_firebase, db, auth;
+        
+        try {
+            app_firebase = initializeApp(firebaseConfig);
+            db = getFirestore(app_firebase);
+            auth = getAuth(app_firebase);
+        } catch(e) {
+            console.warn("Firebase init warning:", e);
         }
 
-        // Initialize Firestore Data Listeners following mandatory paths
-        function setupRealtimeListeners() {
-            const user = auth.currentUser;
-            if (!user) return;
+        const app = {
+            state: {
+                view: 'home', // 'home' or 'admin'
+                user: null,
+                services: [],
+                banners: [],
+                unsubscribeServices: null,
+                unsubscribeBanners: null,
+                waNumber: '6287874417978', // Nomor WA dari prompt
+                slideIndex: 0,
+                isOfflineMode: false
+            },
 
-            const servicesRef = collection(db, 'artifacts', appId, 'public', 'data', 'services');
-            const bannersRef = collection(db, 'artifacts', appId, 'public', 'data', 'banners');
+            init: function() {
+                document.getElementById('current-year').textContent = new Date().getFullYear();
+                
+                // Check if admin is logged in locally
+                if (localStorage.getItem('serviceku_admin_session') === 'true') {
+                    this.state.user = { uid: 'admin-local', email: 'admin@serviceku.local', isAnonymous: false };
+                }
 
-            // Listen to Services
-            onSnapshot(servicesRef, (snapshot) => {
-                if (snapshot.empty) {
-                    seedInitialData();
+                // Set up Auth Listener if auth available
+                if(auth) {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user && !user.isAnonymous) {
+                            this.state.user = user;
+                        }
+                        this.updateAuthUI();
+                        if ((!this.state.user || this.state.user.isAnonymous) && this.state.view === 'admin') {
+                            this.navigate('home');
+                        }
+                    });
+
+                    setTimeout(() => {
+                        if(!this.state.user) signInAnonymously(auth).catch(() => {});
+                    }, 1000);
+                } else {
+                    this.updateAuthUI();
+                }
+
+                // Setup Listeners / Fallback untuk Data
+                this.setupDataListeners();
+                
+                // Render initial view
+                this.render();
+            },
+
+            setupDataListeners: function() {
+                let servicesOk = false;
+                let bannersOk = false;
+
+                if(db) {
+                    try {
+                        const servicesRef = collection(db, 'artifacts', appId, 'public', 'data', 'services');
+                        this.state.unsubscribeServices = onSnapshot(servicesRef, (snapshot) => {
+                            this.state.services = [];
+                            snapshot.forEach((doc) => {
+                                this.state.services.push({ id: doc.id, ...doc.data() });
+                            });
+                            this.state.services.sort((a, b) => b.createdAt - a.createdAt);
+                            servicesOk = true;
+                            if(this.state.view === 'home') this.renderHomeContent();
+                            if(this.state.view === 'admin') this.renderAdminServicesTable();
+                        }, (error) => {
+                            console.warn("Firestore permissions error on services, using LocalStorage fallback:", error.message);
+                            this.enableLocalStorageFallback();
+                        });
+
+                        const bannersRef = collection(db, 'artifacts', appId, 'public', 'data', 'banners');
+                        this.state.unsubscribeBanners = onSnapshot(bannersRef, (snapshot) => {
+                            this.state.banners = [];
+                            snapshot.forEach((doc) => {
+                                this.state.banners.push({ id: doc.id, ...doc.data() });
+                            });
+                            this.state.banners.sort((a, b) => b.createdAt - a.createdAt);
+                            bannersOk = true;
+                            if(this.state.view === 'home') this.renderBannerSlideshow();
+                            if(this.state.view === 'admin') this.renderAdminBannersTable();
+                        }, (error) => {
+                            console.warn("Firestore permissions error on banners, using LocalStorage fallback:", error.message);
+                            this.enableLocalStorageFallback();
+                        });
+                    } catch(e) {
+                        this.enableLocalStorageFallback();
+                    }
+                } else {
+                    this.enableLocalStorageFallback();
+                }
+            },
+
+            enableLocalStorageFallback: function() {
+                this.state.isOfflineMode = true;
+
+                // Services
+                const savedServices = localStorage.getItem('serviceku_services');
+                if (savedServices) {
+                    try {
+                        this.state.services = JSON.parse(savedServices);
+                    } catch(e) {
+                        this.state.services = [...DEFAULT_SERVICES];
+                    }
+                } else {
+                    this.state.services = [...DEFAULT_SERVICES];
+                    localStorage.setItem('serviceku_services', JSON.stringify(DEFAULT_SERVICES));
+                }
+
+                // Banners
+                const savedBanners = localStorage.getItem('serviceku_banners');
+                if (savedBanners) {
+                    try {
+                        this.state.banners = JSON.parse(savedBanners);
+                    } catch(e) {
+                        this.state.banners = [...DEFAULT_BANNERS];
+                    }
+                } else {
+                    this.state.banners = [...DEFAULT_BANNERS];
+                    localStorage.setItem('serviceku_banners', JSON.stringify(DEFAULT_BANNERS));
+                }
+
+                if(this.state.view === 'home') {
+                    this.renderBannerSlideshow();
+                    this.renderHomeContent();
+                } else if(this.state.view === 'admin') {
+                    this.renderAdminServicesTable();
+                    this.renderAdminBannersTable();
+                }
+            },
+
+            // --- Navigation & UI ---
+            navigate: function(viewName) {
+                if (viewName === 'admin' && (!this.state.user || this.state.user.isAnonymous)) {
+                    this.showToast("Anda harus login sebagai admin.", "error");
+                    this.showLoginModal();
                     return;
                 }
-                const items = [];
-                snapshot.forEach((doc) => {
-                    items.push({ id: doc.id, ...doc.data() });
-                });
-                window.state.services = items;
-                renderServices();
-            }, (error) => {
-                console.error("Firestore Services Error:", error);
-                if (window.state.services.length === 0) {
-                    window.state.services = INITIAL_SERVICES;
-                    renderServices();
+                this.state.view = viewName;
+                this.render();
+                window.scrollTo(0,0);
+            },
+
+            render: function() {
+                const mainContent = document.getElementById('main-content');
+                mainContent.innerHTML = '';
+                mainContent.className = "flex-grow pt-20 fade-in";
+
+                if (this.state.view === 'home') {
+                    mainContent.innerHTML = `
+                        <!-- Banner Slideshow Section -->
+                        <section id="banner-container" class="relative bg-slate-900 overflow-hidden shadow-xl"></section>
+                        
+                        <!-- Catalog Section -->
+                        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                            <div class="text-center mb-12">
+                                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Katalog Layanan Jasa Kami</h2>
+                                <p class="text-slate-500 max-w-2xl mx-auto text-lg">Kami melayani perbaikan dan perawatan berbagai macam mesin elektronik kesayangan Anda dengan teknisi handal dan harga transparan.</p>
+                                <div class="w-24 h-1 bg-secondary mx-auto mt-6 rounded-full"></div>
+                            </div>
+                            
+                            <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div class="col-span-full text-center py-10 text-slate-400">
+                                    <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+                                    <p>Memuat layanan...</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Features Banner -->
+                        <section class="bg-blue-50 py-12 border-y border-blue-100">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                                <div class="p-4 bg-white rounded-2xl shadow-sm"><i class="fas fa-shield-alt text-4xl text-secondary mb-3"></i><h4 class="font-bold text-slate-800">Bergaransi 1 Bulan</h4><p class="text-xs text-slate-500 mt-1">Pekerjaan Dijamin</p></div>
+                                <div class="p-4 bg-white rounded-2xl shadow-sm"><i class="fas fa-user-cog text-4xl text-secondary mb-3"></i><h4 class="font-bold text-slate-800">Teknisi Ahli</h4><p class="text-xs text-slate-500 mt-1">Siap Datang Langsung</p></div>
+                                <div class="p-4 bg-white rounded-2xl shadow-sm"><i class="fas fa-tools text-4xl text-secondary mb-3"></i><h4 class="font-bold text-slate-800">Sparepart Asli</h4><p class="text-xs text-slate-500 mt-1">Kualitas Terjamin</p></div>
+                                <div class="p-4 bg-white rounded-2xl shadow-sm"><i class="fas fa-bolt text-4xl text-secondary mb-3"></i><h4 class="font-bold text-slate-800">Respon Cepat</h4><p class="text-xs text-slate-500 mt-1">Jujur & Amanah</p></div>
+                            </div>
+                        </section>
+                    `;
+                    this.renderBannerSlideshow();
+                    this.renderHomeContent();
+                } else if (this.state.view === 'admin') {
+                    mainContent.innerHTML = `
+                        <div class="bg-primary pt-10 pb-24 border-b-4 border-accent shadow-inner">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4">
+                                <div class="bg-white/20 p-4 rounded-xl text-white backdrop-blur-sm">
+                                    <i class="fas fa-cogs text-4xl"></i>
+                                </div>
+                                <div>
+                                    <h1 class="text-3xl font-bold text-white">Dashboard Admin</h1>
+                                    <p class="text-blue-200 mt-1">Kelola portofolio jasa dan promosi website Anda.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 mb-20">
+                            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                                
+                                <!-- Tabs -->
+                                <div class="flex border-b border-slate-200">
+                                    <button onclick="app.switchAdminTab('services')" id="tab-services" class="flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary bg-slate-50 transition-colors">Kelola Jasa Service</button>
+                                    <button onclick="app.switchAdminTab('banners')" id="tab-banners" class="flex-1 py-4 text-center font-semibold text-slate-500 hover:text-primary transition-colors">Kelola Banner Slide</button>
+                                </div>
+
+                                <!-- Tab Content: Services -->
+                                <div id="content-services" class="p-6">
+                                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-list text-secondary"></i> Daftar Jasa Publik</h2>
+                                        <button onclick="app.openServiceModal()" class="bg-gradient-to-r from-secondary to-primary hover:from-primary hover:to-blue-900 text-white px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all font-medium flex items-center gap-2">
+                                            <i class="fas fa-plus"></i> Tambah Jasa Baru
+                                        </button>
+                                    </div>
+                                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                        <table class="min-w-full divide-y divide-slate-200">
+                                            <thead class="bg-slate-50">
+                                                <tr>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Foto & Info</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Harga</th>
+                                                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="admin-services-list" class="bg-white divide-y divide-slate-200">
+                                                <!-- List goes here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Tab Content: Banners -->
+                                <div id="content-banners" class="p-6 hidden">
+                                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="fas fa-images text-accent"></i> Daftar Banner Teks</h2>
+                                        <button onclick="app.openBannerModal()" class="bg-gradient-to-r from-accent to-secondary hover:from-secondary hover:to-primary text-white px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all font-medium flex items-center gap-2">
+                                            <i class="fas fa-plus"></i> Tambah Banner
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="admin-banners-list">
+                                        <!-- List goes here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    this.renderAdminServicesTable();
+                    this.renderAdminBannersTable();
                 }
-            });
+            },
 
-            // Listen to Banners
-            onSnapshot(bannersRef, (snapshot) => {
-                if (snapshot.empty) return;
-                const bannerItems = [];
-                snapshot.forEach((doc) => {
-                    bannerItems.push({ id: doc.id, ...doc.data() });
-                });
-                window.state.banners = bannerItems;
-                renderSlideshow();
-                renderAdminBannerList();
-            }, (error) => {
-                console.error("Firestore Banners Error:", error);
-                if (window.state.banners.length === 0) {
-                    window.state.banners = INITIAL_BANNERS;
-                    renderSlideshow();
-                    renderAdminBannerList();
+            renderHomeContent: function() {
+                const grid = document.getElementById('services-grid');
+                if(!grid) return;
+
+                if (this.state.services.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 bg-slate-100 rounded-2xl border border-slate-200 border-dashed">Belum ada data jasa yang dipublikasikan.</div>`;
+                    return;
                 }
-            });
-        }
 
-        // Seed initial data into Firestore
-        async function seedInitialData() {
-            const user = auth.currentUser;
-            if (!user) return;
+                grid.innerHTML = this.state.services.map(srv => {
+                    const imgUrl = srv.photoData || 'https://placehold.co/600x400/e2e8f0/475569?text=Gambar+Jasa';
+                    
+                    const waMessage = `Halo Serviceku, saya tertarik dengan jasa *${srv.name}* (${srv.price}) yang tertera di website. Apakah teknisi bisa datang?`;
+                    const waLink = `https://wa.me/${this.state.waNumber}?text=${encodeURIComponent(waMessage)}`;
 
-            for (const service of INITIAL_SERVICES) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'services', service.id);
-                await setDoc(docRef, service);
-            }
+                    return `
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-slate-100 flex flex-col h-full fade-in transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-slate-100">
+                            <img src="${imgUrl}" alt="${srv.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur text-primary text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                                <i class="fas fa-tag mr-1"></i> ${srv.price}
+                            </div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-primary transition-colors line-clamp-1">${srv.name}</h3>
+                            <p class="text-slate-600 text-sm mb-4 line-clamp-3 flex-grow">${srv.desc}</p>
+                            
+                            ${srv.area ? `<div class="flex items-center text-xs text-slate-500 mb-4"><i class="fas fa-map-marker-alt text-red-400 mr-2 w-4"></i> ${srv.area}</div>` : ''}
+                            
+                            <a href="${waLink}" target="_blank" class="block w-full text-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all flex justify-center items-center gap-2 mt-auto">
+                                <i class="fab fa-whatsapp text-lg"></i> Pesan via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            },
 
-            for (const banner of INITIAL_BANNERS) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', banner.id);
-                await setDoc(docRef, banner);
-            }
-        }
+            renderBannerSlideshow: function() {
+                const container = document.getElementById('banner-container');
+                if(!container) return;
 
-        // Render Services Cards
-        function renderServices() {
-            const container = document.getElementById('services-grid');
-            const category = window.state.activeCategory;
+                let bannersToRender = this.state.banners;
+                if (bannersToRender.length === 0) {
+                    bannersToRender = DEFAULT_BANNERS;
+                }
 
-            const filtered = category === 'semua' 
-                ? window.state.services 
-                : window.state.services.filter(s => s.category.toLowerCase() === category.toLowerCase());
-
-            if (filtered.length === 0) {
                 container.innerHTML = `
-                    <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200">
-                        <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
-                        <p class="text-slate-500 font-semibold">Belum ada data jasa untuk kategori ini.</p>
+                    <div class="relative h-[400px] md:h-[500px] w-full flex items-center justify-center">
+                        ${bannersToRender.map((b, i) => `
+                            <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out ${i === this.state.slideIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}" id="slide-${i}">
+                                <div class="absolute inset-0 bg-gradient-to-br ${b.bgGradient || 'from-slate-800 to-primary'} opacity-90"></div>
+                                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+                                
+                                <div class="relative z-20 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+                                    <div class="inline-flex items-center justify-center p-3 bg-white/10 backdrop-blur-md rounded-2xl mb-6 shadow-2xl border border-white/20 transform -rotate-3 hover:rotate-0 transition-transform">
+                                        <i class="fas fa-tools text-3xl text-accent mr-3"></i>
+                                        <span class="text-xl font-bold tracking-wider text-white">SERVICEKU</span>
+                                    </div>
+                                    <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4 drop-shadow-lg leading-tight">
+                                        ${b.title}
+                                    </h1>
+                                    <p class="mt-2 text-base md:text-xl text-blue-100 max-w-2xl mx-auto font-light drop-shadow-md">
+                                        ${b.subtitle}
+                                    </p>
+                                    <div class="mt-8 flex gap-4">
+                                        <button onclick="document.getElementById('services-grid').scrollIntoView({behavior: 'smooth', block: 'start'})" class="bg-white text-primary font-bold px-7 py-3 rounded-full shadow-xl hover:bg-slate-100 hover:scale-105 transition-all duration-300">
+                                            Lihat Layanan
+                                        </button>
+                                        <a href="https://wa.me/${this.state.waNumber}" target="_blank" class="bg-green-500 text-white font-bold px-7 py-3 rounded-full shadow-xl hover:bg-green-600 hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                                            <i class="fab fa-whatsapp text-xl"></i> Konsultasi WA
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        
+                        ${bannersToRender.length > 1 ? `
+                        <div class="absolute bottom-6 left-0 right-0 z-30 flex justify-center space-x-3">
+                            ${bannersToRender.map((_, i) => `
+                                <button onclick="app.setSlide(${i})" class="w-3 h-3 rounded-full transition-all duration-300 ${i === this.state.slideIndex ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/70'}"></button>
+                            `).join('')}
+                        </div>
+                        ` : ''}
                     </div>
                 `;
-                return;
-            }
 
-            container.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
-                    <div class="relative h-48 overflow-hidden bg-slate-100">
-                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/0284c7/white?text=Serviceku'">
-                        <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg">
-                            ${item.category}
-                        </span>
-                        ${item.guarantee ? `
-                        <span class="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-                            ${item.guarantee}
-                        </span>` : ''}
-                    </div>
-
-                    <div class="p-5 flex flex-col flex-grow justify-between space-y-4">
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors line-clamp-1">${item.title}</h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">${item.desc}</p>
-                        </div>
-
-                        <div class="space-y-3 pt-2 border-t border-slate-100">
-                            <div class="flex items-baseline justify-between">
-                                <span class="text-[11px] font-semibold text-slate-400">Biaya Service:</span>
-                                <span class="text-brand-600 font-extrabold text-base">Rp ${item.price}</span>
-                            </div>
-
-                            <div class="text-[11px] text-slate-500 flex items-center gap-1">
-                                <i class="fa-solid fa-location-dot text-red-500"></i>
-                                <span class="truncate">${item.location || 'Indramayu, Cirebon, Majalengka'}</span>
-                            </div>
-
-                            <div class="flex gap-2">
-                                <button onclick="openDetailModal('${item.id}')" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">
-                                    Detail
-                                </button>
-                                <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20ingin%20pesan%20jasa%20*${encodeURIComponent(item.title)}*%20dengan%20estimasi%20biaya%20Rp%20${encodeURIComponent(item.price)}." target="_blank" rel="noopener noreferrer" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all">
-                                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                                    <span>Pesan WA</span>
-                                </a>
-                            </div>
-
-                            ${window.state.isAdmin ? `
-                            <div class="flex gap-2 pt-2 border-t border-dashed border-slate-200">
-                                <button onclick="openEditServiceModal('${item.id}')" class="flex-1 py-1 bg-amber-100 text-amber-800 font-bold rounded-lg text-[11px] hover:bg-amber-200">
-                                    <i class="fa-solid fa-pen"></i> Edit
-                                </button>
-                                <button onclick="deleteService('${item.id}')" class="flex-1 py-1 bg-red-100 text-red-700 font-bold rounded-lg text-[11px] hover:bg-red-200">
-                                    <i class="fa-solid fa-trash"></i> Hapus
-                                </button>
-                            </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render Slideshow Banner
-        function renderSlideshow() {
-            const wrapper = document.getElementById('slides-wrapper');
-            const indicators = document.getElementById('slideshow-indicators');
-
-            const banners = window.state.banners.length > 0 ? window.state.banners : INITIAL_BANNERS;
-
-            wrapper.innerHTML = banners.map((b, idx) => `
-                <div class="w-full flex-shrink-0 ${b.theme || 'gradient-banner-1'} py-16 px-6 md:px-16 flex items-center">
-                    <div class="max-w-4xl mx-auto text-center md:text-left space-y-4">
-                        <span class="inline-block px-3.5 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-amber-300 border border-white/10">
-                            ${b.badge || 'Serviceku Infografis'}
-                        </span>
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight text-white">
-                            ${b.title}
-                        </h1>
-                        <p class="text-slate-200 text-sm md:text-base max-w-2xl leading-relaxed">
-                            ${b.subtitle}
-                        </p>
-                        <div class="pt-2 flex flex-wrap justify-center md:justify-start gap-3">
-                            <a href="#katalog" class="bg-white text-slate-900 font-bold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-lg hover:bg-slate-100 transition-all">
-                                Lihat Katalog Jasa
-                            </a>
-                            <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20ingin%20konsultasi." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-lg flex items-center gap-2 transition-all">
-                                <i class="fa-brands fa-whatsapp text-lg"></i>
-                                <span>Hubungi WA</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            indicators.innerHTML = banners.map((_, idx) => `
-                <button onclick="goToSlide(${idx})" class="w-2.5 h-2.5 rounded-full transition-all ${idx === window.state.currentSlideIndex ? 'bg-amber-400 w-8' : 'bg-white/50'}"></button>
-            `).join('');
-
-            updateSlidePosition();
-        }
-
-        function updateSlidePosition() {
-            const wrapper = document.getElementById('slides-wrapper');
-            const idx = window.state.currentSlideIndex;
-            wrapper.style.transform = `translateX(-${idx * 100}%)`;
-            renderSlideshowIndicators();
-        }
-
-        function renderSlideshowIndicators() {
-            const dots = document.querySelectorAll('#slideshow-indicators button');
-            dots.forEach((dot, idx) => {
-                if (idx === window.state.currentSlideIndex) {
-                    dot.className = "w-8 h-2.5 bg-amber-400 rounded-full transition-all";
-                } else {
-                    dot.className = "w-2.5 h-2.5 bg-white/50 rounded-full transition-all";
+                if (this.slideInterval) clearInterval(this.slideInterval);
+                if (bannersToRender.length > 1) {
+                    this.slideInterval = setInterval(() => {
+                        this.setSlide((this.state.slideIndex + 1) % bannersToRender.length);
+                    }, 5000);
                 }
-            });
-        }
+            },
 
-        window.nextSlide = function() {
-            const banners = window.state.banners.length > 0 ? window.state.banners : INITIAL_BANNERS;
-            window.state.currentSlideIndex = (window.state.currentSlideIndex + 1) % banners.length;
-            updateSlidePosition();
-        }
+            setSlide: function(index) {
+                const slides = document.querySelectorAll('[id^="slide-"]');
+                const dots = document.querySelectorAll('.absolute.bottom-6 button');
+                
+                if(!slides.length || !slides[this.state.slideIndex]) return;
 
-        window.prevSlide = function() {
-            const banners = window.state.banners.length > 0 ? window.state.banners : INITIAL_BANNERS;
-            window.state.currentSlideIndex = (window.state.currentSlideIndex - 1 + banners.length) % banners.length;
-            updateSlidePosition();
-        }
-
-        window.goToSlide = function(index) {
-            window.state.currentSlideIndex = index;
-            updateSlidePosition();
-        }
-
-        // Auto slideshow timer
-        function startSlideshowAutoplay() {
-            if (window.state.slideshowInterval) clearInterval(window.state.slideshowInterval);
-            window.state.slideshowInterval = setInterval(() => {
-                window.nextSlide();
-            }, 6000);
-        }
-
-        // Render Admin Banner Management List
-        function renderAdminBannerList() {
-            const container = document.getElementById('admin-banners-list');
-            const banners = window.state.banners.length > 0 ? window.state.banners : INITIAL_BANNERS;
-
-            container.innerHTML = banners.map(b => `
-                <div class="flex items-center justify-between p-3 bg-slate-100 rounded-xl border border-slate-200 text-xs">
-                    <div>
-                        <p class="font-bold text-slate-800">${b.title}</p>
-                        <p class="text-slate-500 text-[11px]">${b.subtitle}</p>
-                    </div>
-                    <button onclick="deleteBanner('${b.id}')" class="text-red-600 hover:text-red-800 p-2 font-bold">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        // Filter Category Click Handler
-        window.filterCategory = function(cat) {
-            window.state.activeCategory = cat;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.innerText.toLowerCase().includes(cat.toLowerCase()) || (cat === 'semua' && btn.innerText.includes('Semua'))) {
-                    btn.className = "filter-btn active bg-brand-600 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap shadow-sm transition-all";
-                } else {
-                    btn.className = "filter-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all";
+                slides[this.state.slideIndex].classList.replace('opacity-100', 'opacity-0');
+                slides[this.state.slideIndex].classList.replace('z-10', 'z-0');
+                if(dots[this.state.slideIndex]) {
+                    dots[this.state.slideIndex].classList.replace('bg-white', 'bg-white/40');
+                    dots[this.state.slideIndex].classList.remove('scale-125');
                 }
-            });
-            renderServices();
-        }
 
-        // Admin Auth Handler
-        window.handleAdminLogin = function(e) {
-            e.preventDefault();
-            const user = document.getElementById('admin-username').value.trim();
-            const pass = document.getElementById('admin-password').value.trim();
+                this.state.slideIndex = index;
 
-            if (user === 'admin' && pass === 'admin123') {
-                window.state.isAdmin = true;
-                showToast("Berhasil login sebagai Admin Serviceku!");
-                closeAdminModal();
+                if(slides[this.state.slideIndex]) {
+                    slides[this.state.slideIndex].classList.replace('opacity-0', 'opacity-100');
+                    slides[this.state.slideIndex].classList.replace('z-0', 'z-10');
+                }
+                if(dots[this.state.slideIndex]) {
+                    dots[this.state.slideIndex].classList.replace('bg-white/40', 'bg-white');
+                    dots[this.state.slideIndex].classList.add('scale-125');
+                }
+            },
 
-                // Update UI state
-                document.getElementById('admin-btn-text').innerText = "Admin (Aktif)";
-                document.getElementById('admin-login-btn').className = "inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm";
-                document.getElementById('admin-actions-bar').classList.remove('hidden');
+            renderAdminServicesTable: function() {
+                const tbody = document.getElementById('admin-services-list');
+                if(!tbody) return;
 
-                renderServices();
-                renderAdminBannerList();
-            } else {
-                showToast("Username atau Password salah!", "error");
-            }
-        }
+                if (this.state.services.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-500">Belum ada layanan terdaftar. Klik "Tambah Jasa Baru".</td></tr>`;
+                    return;
+                }
 
-        window.togglePasswordVisibility = function() {
-            const input = document.getElementById('admin-password');
-            const icon = document.getElementById('password-toggle-icon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-sm';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye text-sm';
-            }
-        }
+                tbody.innerHTML = this.state.services.map(srv => {
+                    const imgUrl = srv.photoData || 'https://placehold.co/100x100/e2e8f0/475569?text=No+Img';
+                    return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-16 w-16">
+                                    <img class="h-16 w-16 rounded-lg object-cover border border-slate-200" src="${imgUrl}" alt="">
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-bold text-slate-900">${srv.name}</div>
+                                    <div class="text-xs text-slate-500 max-w-xs truncate" title="${srv.desc}">${srv.desc}</div>
+                                    <div class="text-xs text-slate-400 mt-1"><i class="fas fa-map-marker-alt"></i> ${srv.area || '-'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                ${srv.price}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick='app.openServiceModal(${JSON.stringify(srv).replace(/'/g, "&#39;")})' class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition-colors mr-2" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button onclick="app.deleteService('${srv.id}')" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    `;
+                }).join('');
+            },
 
-        // Service Modal Operations
-        window.openAddServiceModal = function() {
-            document.getElementById('service-modal-title').innerText = "Tambah Jasa Service Baru";
-            document.getElementById('service-id').value = "";
-            document.getElementById('service-form').reset();
-            document.getElementById('service-modal').classList.remove('hidden');
-        }
+            renderAdminBannersTable: function() {
+                const list = document.getElementById('admin-banners-list');
+                if(!list) return;
 
-        window.openEditServiceModal = function(id) {
-            const service = window.state.services.find(s => s.id === id);
-            if (!service) return;
+                if (this.state.banners.length === 0) {
+                    list.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 bg-slate-50 rounded-xl border border-dashed">Belum ada banner custom.</div>`;
+                    return;
+                }
 
-            document.getElementById('service-modal-title').innerText = "Edit Jasa Service";
-            document.getElementById('service-id').value = service.id;
-            document.getElementById('service-title').value = service.title;
-            document.getElementById('service-category').value = service.category;
-            document.getElementById('service-price').value = service.price;
-            document.getElementById('service-image').value = service.image;
-            document.getElementById('service-desc').value = service.desc;
-            document.getElementById('service-location').value = service.location || "Indramayu, Cirebon, Majalengka";
-            document.getElementById('service-guarantee').value = service.guarantee || "Garansi Service 1 Bulan";
-
-            document.getElementById('service-modal').classList.remove('hidden');
-        }
-
-        window.saveService = async function(e) {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const id = document.getElementById('service-id').value || `srv-${Date.now()}`;
-            const data = {
-                id,
-                title: document.getElementById('service-title').value,
-                category: document.getElementById('service-category').value,
-                price: document.getElementById('service-price').value,
-                image: document.getElementById('service-image').value,
-                desc: document.getElementById('service-desc').value,
-                location: document.getElementById('service-location').value,
-                guarantee: document.getElementById('service-guarantee').value
-            };
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'services', id);
-                await setDoc(docRef, data);
-                showToast("Data jasa berhasil dipublikasikan secara permanen!");
-                closeServiceModal();
-            } catch (err) {
-                console.error("Save Service Error:", err);
-                showToast("Gagal menyimpan data ke database", "error");
-            }
-        }
-
-        window.deleteService = async function(id) {
-            if (!confirm("Apakah Anda yakin ingin menghapus jasa ini secara permanen?")) return;
-            const user = auth.currentUser;
-            if (!user) return;
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'services', id);
-                await deleteDoc(docRef);
-                showToast("Jasa berhasil dihapus.");
-            } catch (err) {
-                console.error("Delete Service Error:", err);
-                showToast("Gagal menghapus data", "error");
-            }
-        }
-
-        // Banner Modal Operations
-        window.openManageBannersModal = function() {
-            renderAdminBannerList();
-            document.getElementById('banners-modal').classList.remove('hidden');
-        }
-
-        window.saveBanner = async function(e) {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const id = `ban-${Date.now()}`;
-            const bannerData = {
-                id,
-                title: document.getElementById('banner-title').value,
-                subtitle: document.getElementById('banner-subtitle').value,
-                theme: document.getElementById('banner-theme').value,
-                badge: document.getElementById('banner-badge').value || "PROMO SERVICE"
-            };
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                await setDoc(docRef, bannerData);
-                showToast("Banner slideshow baru berhasil diterbitkan!");
-                e.target.reset();
-            } catch (err) {
-                console.error("Save Banner Error:", err);
-                showToast("Gagal menyimpan banner", "error");
-            }
-        }
-
-        window.deleteBanner = async function(id) {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'banners', id);
-                await deleteDoc(docRef);
-                showToast("Banner berhasil dihapus.");
-            } catch (err) {
-                console.error("Delete Banner Error:", err);
-            }
-        }
-
-        // Service Detail Modal View
-        window.openDetailModal = function(id) {
-            const item = window.state.services.find(s => s.id === id);
-            if (!item) return;
-
-            const container = document.getElementById('detail-content');
-            container.innerHTML = `
-                <div class="space-y-4">
-                    <img src="${item.image}" alt="${item.title}" class="w-full h-52 object-cover rounded-2xl shadow-sm">
-                    <div>
-                        <span class="text-xs font-bold text-brand-600 uppercase bg-brand-50 px-2.5 py-1 rounded-md">${item.category}</span>
-                        <h3 class="text-2xl font-extrabold text-slate-900 mt-2">${item.title}</h3>
-                        <p class="text-xl font-black text-brand-600 mt-1">Rp ${item.price}</p>
-                    </div>
-
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        <p class="font-bold text-slate-900 mb-1">Deskripsi Pengerjaan:</p>
-                        ${item.desc}
-                    </div>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="flex items-center gap-2 text-slate-600">
-                            <i class="fa-solid fa-shield text-emerald-600 text-base"></i>
-                            <span>${item.guarantee || 'Garansi Service 1 Bulan'}</span>
+                list.innerHTML = this.state.banners.map(b => `
+                    <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-5 text-white relative shadow-lg">
+                        <div class="absolute top-3 right-3 flex gap-2">
+                            <button onclick='app.openBannerModal(${JSON.stringify(b).replace(/'/g, "&#39;")})' class="text-white hover:text-blue-300 bg-black/20 hover:bg-black/40 p-1.5 rounded transition-colors"><i class="fas fa-edit text-sm"></i></button>
+                            <button onclick="app.deleteBanner('${b.id}')" class="text-white hover:text-red-300 bg-black/20 hover:bg-black/40 p-1.5 rounded transition-colors"><i class="fas fa-trash text-sm"></i></button>
                         </div>
-                        <div class="flex items-center gap-2 text-slate-600">
-                            <i class="fa-solid fa-location-dot text-red-500 text-base"></i>
-                            <span>Melayani: ${item.location || 'Indramayu, Cirebon, Majalengka'}</span>
-                        </div>
+                        <h4 class="font-bold text-lg mb-1 pr-16">${b.title}</h4>
+                        <p class="text-slate-300 text-sm opacity-80">${b.subtitle || '-'}</p>
                     </div>
+                `).join('');
+            },
 
-                    <a href="https://wa.me/6287874417978?text=Halo%20Serviceku,%20saya%20ingin%20memesan%20jasa%20*${encodeURIComponent(item.title)}*%20dengan%20biaya%20Rp%20${encodeURIComponent(item.price)}." target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-center flex items-center justify-center gap-2 text-sm shadow-lg transition-all">
-                        <i class="fa-brands fa-whatsapp text-xl"></i>
-                        <span>Pesan Jasa via WhatsApp (+62 878-7441-7978)</span>
-                    </a>
-                </div>
-            `;
+            switchAdminTab: function(tab) {
+                document.getElementById('content-services').classList.add('hidden');
+                document.getElementById('content-banners').classList.add('hidden');
+                
+                document.getElementById('tab-services').className = "flex-1 py-4 text-center font-semibold text-slate-500 hover:text-primary transition-colors";
+                document.getElementById('tab-banners').className = "flex-1 py-4 text-center font-semibold text-slate-500 hover:text-primary transition-colors";
 
-            document.getElementById('detail-modal').classList.remove('hidden');
-        }
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).className = "flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary bg-slate-50 transition-colors";
+            },
 
-        // Modal Closers
-        window.closeAdminModal = () => document.getElementById('admin-modal').classList.add('hidden');
-        window.openAdminModal = () => document.getElementById('admin-modal').classList.remove('hidden');
-        window.closeServiceModal = () => document.getElementById('service-modal').classList.add('hidden');
-        window.closeBannersModal = () => document.getElementById('banners-modal').classList.add('hidden');
-        window.closeDetailModal = () => document.getElementById('detail-modal').classList.add('hidden');
+            updateAuthUI: function() {
+                const authBtnContainer = document.getElementById('auth-btn-container');
+                if(!authBtnContainer) return;
 
-        // Toast Helper
-        function showToast(msg, type = "success") {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toast-icon');
-            const message = document.getElementById('toast-message');
+                if (this.state.user && !this.state.user.isAnonymous) {
+                    authBtnContainer.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <button onclick="app.navigate('admin')" class="bg-primary text-white hover:bg-blue-800 px-4 py-2 rounded-full font-semibold transition-all shadow text-sm hidden md:block">
+                                <i class="fas fa-cogs"></i> Dashboard Admin
+                            </button>
+                            <button onclick="app.handleLogout()" class="text-slate-500 hover:text-red-500 px-2 py-2 rounded-full transition-colors bg-slate-100 hover:bg-red-50" title="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    authBtnContainer.innerHTML = `
+                        <button onclick="app.showLoginModal()" class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white px-5 py-2 rounded-full font-semibold transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-2">
+                            <i class="fas fa-user-shield"></i> <span class="hidden sm:inline">Admin Login</span>
+                        </button>
+                    `;
+                }
+            },
 
-            message.innerText = msg;
-            if (type === "error") {
-                icon.className = "fa-solid fa-circle-xmark text-red-400 text-lg";
-            } else {
-                icon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            togglePasswordVisibility: function(inputId, iconId) {
+                const input = document.getElementById(inputId);
+                const icon = document.getElementById(iconId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = "password";
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            },
+
+            showLoginModal: function() {
+                this.showModal('login-modal');
+                document.getElementById('username').focus();
+            },
+
+            handleLogin: async function(e) {
+                e.preventDefault();
+                const userField = document.getElementById('username').value;
+                const pass = document.getElementById('password').value;
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                
+                let email = userField.includes('@') ? userField : `${userField}@serviceku.local`;
+
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                btn.disabled = true;
+
+                let authenticated = false;
+
+                if (auth && !this.state.isOfflineMode) {
+                    try {
+                        await signInWithEmailAndPassword(auth, email, pass);
+                        authenticated = true;
+                    } catch (error) {
+                        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                            try {
+                                await createUserWithEmailAndPassword(auth, email, pass);
+                                authenticated = true;
+                            } catch(createErr) {}
+                        }
+                    }
+                }
+
+                // If Firebase auth isn't connected or failed, allow local admin session
+                if (!authenticated) {
+                    this.state.user = { uid: 'admin-local', email: email, isAnonymous: false };
+                    localStorage.setItem('serviceku_admin_session', 'true');
+                    this.updateAuthUI();
+                }
+
+                this.closeModals();
+                this.showToast("Login Admin Berhasil!", "success");
+                this.navigate('admin');
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            },
+
+            handleLogout: async function() {
+                try {
+                    localStorage.removeItem('serviceku_admin_session');
+                    this.state.user = null;
+                    if(auth) await signOut(auth);
+                    this.showToast("Berhasil logout.", "info");
+                    this.navigate('home');
+                    if(auth) setTimeout(() => signInAnonymously(auth).catch(() => {}), 500);
+                } catch(e) {
+                    console.error(e);
+                }
+            },
+
+            handleServiceSubmit: async function(e) {
+                e.preventDefault();
+                if(!this.state.user && !this.state.isOfflineMode) return this.showToast("Ditolak: Akses hanya untuk Admin", "error");
+
+                const id = document.getElementById('service-id').value;
+                const name = document.getElementById('service-name').value;
+                const price = document.getElementById('service-price').value;
+                const desc = document.getElementById('service-desc').value;
+                const area = document.getElementById('service-area').value;
+                const photoData = document.getElementById('service-image-data').value;
+
+                const btn = document.getElementById('service-submit-btn');
+                const origText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+                btn.disabled = true;
+
+                const serviceObj = {
+                    name, price, desc, area, photoData,
+                    updatedAt: Date.now()
+                };
+
+                let savedInFirestore = false;
+
+                if (db && !this.state.isOfflineMode) {
+                    try {
+                        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'services');
+                        if (id) {
+                            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services', id), serviceObj);
+                        } else {
+                            serviceObj.createdAt = Date.now();
+                            await addDoc(collRef, serviceObj);
+                        }
+                        savedInFirestore = true;
+                    } catch(err) {
+                        console.warn("Firestore error, fallback to local storage:", err.message);
+                        this.state.isOfflineMode = true;
+                    }
+                }
+
+                // Sync with LocalStorage
+                if (!savedInFirestore || this.state.isOfflineMode) {
+                    let currentServices = JSON.parse(localStorage.getItem('serviceku_services') || '[]');
+                    if (id) {
+                        const idx = currentServices.findIndex(s => s.id === id);
+                        if (idx !== -1) {
+                            currentServices[idx] = { ...currentServices[idx], ...serviceObj };
+                        }
+                    } else {
+                        serviceObj.id = 'srv-' + Date.now();
+                        serviceObj.createdAt = Date.now();
+                        currentServices.unshift(serviceObj);
+                    }
+                    localStorage.setItem('serviceku_services', JSON.stringify(currentServices));
+                    this.state.services = currentServices;
+                    if(this.state.view === 'home') this.renderHomeContent();
+                    if(this.state.view === 'admin') this.renderAdminServicesTable();
+                }
+
+                this.showToast("Jasa berhasil disimpan!", "success");
+                this.closeModals();
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            },
+
+            deleteService: async function(id) {
+                if(!this.state.user && !this.state.isOfflineMode) return;
+                
+                if (db && !this.state.isOfflineMode) {
+                    try {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services', id));
+                    } catch(e) {
+                        this.state.isOfflineMode = true;
+                    }
+                }
+
+                let currentServices = JSON.parse(localStorage.getItem('serviceku_services') || '[]');
+                currentServices = currentServices.filter(s => s.id !== id);
+                localStorage.setItem('serviceku_services', JSON.stringify(currentServices));
+                this.state.services = currentServices;
+                if(this.state.view === 'home') this.renderHomeContent();
+                if(this.state.view === 'admin') this.renderAdminServicesTable();
+                
+                this.showToast("Jasa berhasil dihapus.", "success");
+            },
+
+            handleBannerSubmit: async function(e) {
+                e.preventDefault();
+                if(!this.state.user && !this.state.isOfflineMode) return;
+
+                const id = document.getElementById('banner-id').value;
+                const title = document.getElementById('banner-title').value;
+                const subtitle = document.getElementById('banner-subtitle').value;
+                
+                const btn = document.getElementById('banner-submit-btn');
+                btn.disabled = true; btn.innerHTML = 'Menyimpan...';
+
+                const bannerObj = { title, subtitle, updatedAt: Date.now(), bgGradient: 'from-blue-900 to-indigo-800' };
+                let savedInFirestore = false;
+
+                if (db && !this.state.isOfflineMode) {
+                    try {
+                        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'banners');
+                        if(id) {
+                            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'banners', id), bannerObj);
+                        } else {
+                            bannerObj.createdAt = Date.now();
+                            await addDoc(collRef, bannerObj);
+                        }
+                        savedInFirestore = true;
+                    } catch(e) {
+                        this.state.isOfflineMode = true;
+                    }
+                }
+
+                if(!savedInFirestore || this.state.isOfflineMode) {
+                    let currentBanners = JSON.parse(localStorage.getItem('serviceku_banners') || '[]');
+                    if(id) {
+                        const idx = currentBanners.findIndex(b => b.id === id);
+                        if(idx !== -1) currentBanners[idx] = { ...currentBanners[idx], ...bannerObj };
+                    } else {
+                        bannerObj.id = 'ban-' + Date.now();
+                        bannerObj.createdAt = Date.now();
+                        currentBanners.unshift(bannerObj);
+                    }
+                    localStorage.setItem('serviceku_banners', JSON.stringify(currentBanners));
+                    this.state.banners = currentBanners;
+                    if(this.state.view === 'home') this.renderBannerSlideshow();
+                    if(this.state.view === 'admin') this.renderAdminBannersTable();
+                }
+
+                this.showToast("Banner tersimpan!", "success");
+                this.closeModals();
+                btn.disabled = false; btn.innerHTML = 'Simpan Banner';
+            },
+
+            deleteBanner: async function(id) {
+                if(!this.state.user && !this.state.isOfflineMode) return;
+                if (db && !this.state.isOfflineMode) {
+                    try {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'banners', id));
+                    } catch(e) {}
+                }
+                let currentBanners = JSON.parse(localStorage.getItem('serviceku_banners') || '[]');
+                currentBanners = currentBanners.filter(b => b.id !== id);
+                localStorage.setItem('serviceku_banners', JSON.stringify(currentBanners));
+                this.state.banners = currentBanners;
+                if(this.state.view === 'home') this.renderBannerSlideshow();
+                if(this.state.view === 'admin') this.renderAdminBannersTable();
+                this.showToast("Banner dihapus.", "success");
+            },
+
+            handleImageSelect: function(event, previewContainerId) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if(file.size > 5 * 1024 * 1024) {
+                    this.showToast("Ukuran file terlalu besar. Maksimal 5MB.", "error");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const max_dim = 800;
+
+                        if (width > height) {
+                            if (width > max_dim) { height *= max_dim / width; width = max_dim; }
+                        } else {
+                            if (height > max_dim) { width *= max_dim / height; height = max_dim; }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        
+                        if(dataUrl.length > 900000) {
+                            this.showToast("Gambar masih terlalu besar setelah dikompres. Coba gambar lain.", "error");
+                            return;
+                        }
+
+                        document.getElementById('service-image-data').value = dataUrl;
+                        
+                        const previewDiv = document.getElementById(previewContainerId);
+                        previewDiv.querySelector('img').src = dataUrl;
+                        previewDiv.classList.remove('hidden');
+                        document.querySelector('label[for="service-image-upload"]').classList.add('hidden');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+
+            clearImagePreview: function(previewId, dataId, inputId) {
+                document.getElementById(dataId).value = '';
+                document.getElementById(inputId).value = '';
+                document.getElementById(previewId).classList.add('hidden');
+                document.getElementById(previewId).querySelector('img').src = '';
+                document.querySelector('label[for="' + inputId + '"]').classList.remove('hidden');
+            },
+
+            showModal: function(modalId) {
+                const backdrop = document.getElementById('modal-backdrop');
+                const modal = document.getElementById(modalId);
+                backdrop.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('hidden');
+                    requestAnimationFrame(() => {
+                        modal.classList.remove('scale-95', 'opacity-0');
+                        modal.classList.add('scale-100', 'opacity-100');
+                    });
+                }, 10);
+            },
+
+            closeModals: function() {
+                const modals = ['login-modal', 'service-modal', 'banner-modal'];
+                modals.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el && !el.classList.contains('hidden')) {
+                        el.classList.remove('scale-100', 'opacity-100');
+                        el.classList.add('scale-95', 'opacity-0');
+                        setTimeout(() => el.classList.add('hidden'), 300);
+                    }
+                });
+                
+                setTimeout(() => {
+                    document.getElementById('modal-backdrop').classList.add('hidden');
+                    document.getElementById('login-form').reset();
+                    document.getElementById('service-form').reset();
+                    this.clearImagePreview('service-image-preview', 'service-image-data', 'service-image-upload');
+                }, 300);
+            },
+
+            openServiceModal: function(data = null) {
+                document.getElementById('service-form').reset();
+                this.clearImagePreview('service-image-preview', 'service-image-data', 'service-image-upload');
+                
+                if(data) {
+                    document.getElementById('service-modal-title').textContent = 'Edit Jasa';
+                    document.getElementById('service-id').value = data.id;
+                    document.getElementById('service-name').value = data.name;
+                    document.getElementById('service-price').value = data.price;
+                    document.getElementById('service-desc').value = data.desc;
+                    document.getElementById('service-area').value = data.area || '';
+                    
+                    if(data.photoData) {
+                        document.getElementById('service-image-data').value = data.photoData;
+                        const previewDiv = document.getElementById('service-image-preview');
+                        previewDiv.querySelector('img').src = data.photoData;
+                        previewDiv.classList.remove('hidden');
+                        document.querySelector('label[for="service-image-upload"]').classList.add('hidden');
+                    }
+                } else {
+                    document.getElementById('service-modal-title').textContent = 'Tambah Jasa Baru';
+                    document.getElementById('service-id').value = '';
+                }
+                this.showModal('service-modal');
+            },
+
+            openBannerModal: function(data = null) {
+                document.getElementById('banner-form').reset();
+                if(data) {
+                    document.getElementById('banner-modal-title').textContent = 'Edit Banner';
+                    document.getElementById('banner-id').value = data.id;
+                    document.getElementById('banner-title').value = data.title;
+                    document.getElementById('banner-subtitle').value = data.subtitle;
+                } else {
+                    document.getElementById('banner-modal-title').textContent = 'Tambah Banner Baru';
+                    document.getElementById('banner-id').value = '';
+                }
+                this.showModal('banner-modal');
+            },
+
+            showToast: function(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                
+                let icon = 'info-circle';
+                if(type === 'success') icon = 'check-circle';
+                if(type === 'error') icon = 'exclamation-circle';
+
+                toast.className = `toast ${type} flex items-center gap-3`;
+                toast.innerHTML = `<i class="fas fa-${icon} text-xl"></i> <span>${message}</span>`;
+                
+                container.appendChild(toast);
+                
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
             }
-
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3500);
-        }
-
-        // Initialize App
-        window.onload = async function() {
-            await initAuth();
-            setupRealtimeListeners();
-            startSlideshowAutoplay();
         };
+
+        window.app = app;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
     </script>
 </body>
 </html>
